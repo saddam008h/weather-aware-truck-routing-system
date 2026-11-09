@@ -57,11 +57,7 @@ export function ForecastPanel() {
         </div>
       </div>
 
-      {tripHeatmap ? (
-        <HeatmapLegend metric={heatmapMetric} heatmap={tripHeatmap} hour={forecastHour} />
-      ) : (
-        <ForecastStatus />
-      )}
+      {tripHeatmap ? <HeatmapLegend metric={heatmapMetric} /> : <ForecastStatus />}
     </div>
   );
 }

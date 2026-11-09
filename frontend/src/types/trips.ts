@@ -134,7 +134,6 @@ export interface RiskLevelDetails {
 
 export interface HeatmapMetricDetails {
   label: string;
-  unit: string;
   /** Values at or below `min` are invisible, values at `max` get the strongest color. */
   min: number;
   max: number;
@@ -142,10 +141,6 @@ export interface HeatmapMetricDetails {
   colorVars: string[];
   /** Labelled points under the legend's scale (risk levels, or the brief's thresholds). */
   ticks: { value: number; label: string }[];
-  /** What the legend calls the corridor's worst value at the slider hour. */
-  peakLabel: string;
-  /** Decimals when showing that value. */
-  decimals: number;
 }
 
 /** A checkpoint plus the route it belongs to, so the map and list can point at the same one. */

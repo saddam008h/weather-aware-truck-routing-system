@@ -92,17 +92,13 @@ export const FORECAST_PLAYBACK_STEP_MS = 700;
 export const HEATMAP_METRICS: Record<HeatmapMetric, HeatmapMetricDetails> = {
   risk: {
     label: "Overall risk",
-    unit: "",
     min: 0,
     max: 4,
     colorVars: ["--heatmap-risk-1", "--heatmap-risk-2", "--heatmap-risk-3", "--heatmap-risk-4"],
     ticks: RISK_LEVEL_ORDER.map((level, score) => ({ value: score, label: RISK_LEVELS[level].label })),
-    peakLabel: "Worst in the corridor now",
-    decimals: 0,
   },
   wind_mph: {
     label: "Wind",
-    unit: "mph",
     // Under 10 mph is just a normal day, so it stays clear.
     min: 10,
     max: 55,
@@ -114,12 +110,9 @@ export const HEATMAP_METRICS: Record<HeatmapMetric, HeatmapMetricDetails> = {
       { value: 45, label: "45" },
       { value: 55, label: "55+ mph" },
     ],
-    peakLabel: "Strongest in the corridor now",
-    decimals: 0,
   },
   rain_in_hr: {
     label: "Rain",
-    unit: "in/hr",
     min: 0,
     max: 0.5,
     colorVars: ["--heatmap-rain-1", "--heatmap-rain-2", "--heatmap-rain-3", "--heatmap-rain-4"],
@@ -129,12 +122,9 @@ export const HEATMAP_METRICS: Record<HeatmapMetric, HeatmapMetricDetails> = {
       { value: 0.25, label: "0.25" },
       { value: 0.5, label: "0.5+ in/hr" },
     ],
-    peakLabel: "Heaviest in the corridor now",
-    decimals: 2,
   },
   snow_in_hr: {
     label: "Snow",
-    unit: "in/hr",
     min: 0,
     max: 2,
     colorVars: ["--heatmap-snow-1", "--heatmap-snow-2", "--heatmap-snow-3", "--heatmap-snow-4"],
@@ -144,8 +134,6 @@ export const HEATMAP_METRICS: Record<HeatmapMetric, HeatmapMetricDetails> = {
       { value: 1, label: "1" },
       { value: 2, label: "2+ in/hr" },
     ],
-    peakLabel: "Heaviest in the corridor now",
-    decimals: 1,
   },
 };
 
