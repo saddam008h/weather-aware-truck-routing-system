@@ -48,14 +48,9 @@ export function TripResults() {
       <RecommendationBanner tripPlan={tripPlan} />
       <TripWarnings warnings={tripPlan.warnings} />
 
-      <section className="flex flex-col gap-md" aria-labelledby="route-options-title">
+      <section className="flex flex-col gap-md" aria-label="Route options">
         {/* One color key for all the cards' risk bars. */}
-        <div className="flex flex-col gap-xs">
-          <h2 id="route-options-title" className="text-sm font-semibold text-text-primary">
-            Route options
-          </h2>
-          <RiskLegend showUnknown={tripPlan.routes.some((route) => route.risk.unknown_miles > 0)} />
-        </div>
+        <RiskLegend showUnknown={tripPlan.routes.some((route) => route.risk.unknown_miles > 0)} />
 
         {tripPlan.routes.map((route) => (
           <RouteCard
