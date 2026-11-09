@@ -3,6 +3,9 @@
 Helps a truck driver pick the safest route for a trip, based on the weather the truck will actually drive
 into, the load weight and the travel time.
 
+- **App:** https://weather-aware-truck-routing-omega-eight.vercel.app
+- **API docs (Swagger):** https://weather-aware-truck-routing-api-rosy.vercel.app/api/docs/
+
 Enter an origin, a destination, a departure time and the load weight. The app finds up to three routes,
 checks the forecast every 10, 25 or 50 miles at the time the truck reaches each point, scores the risk
 using the wind / rain / snow thresholds and load rules from the brief, and recommends a route. Everything
