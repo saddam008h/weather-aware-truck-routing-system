@@ -60,8 +60,8 @@ class PlanTripTests(TripApiTestCase):
 
         self.assertEqual(data["recommended_route_id"], north["id"])
         self.assertTrue(north["is_recommended"])
-        # The runner-up is the rainy route (no Severe miles, but High ones).
-        self.assertIn("High-risk miles", data["recommendation"])
+        # A slower route won, so the reason says why it beat the fastest (windy) one.
+        self.assertEqual(data["recommendation"], f"Fewer Severe miles than Route {straight['id']} (0 vs 80).")
 
     def test_checkpoints_carry_eta_weather_and_risk(self):
         data = self.client.post(self.url, self.trip(), format="json").json()

@@ -61,29 +61,33 @@ def rank_key(route: PlannedRoute) -> tuple:
 
 
 def recommend(routes: list[PlannedRoute]) -> tuple[PlannedRoute, str]:
-    """The best route and a one-line reason it beat the runner-up."""
+    """The best route and a one-line reason for picking it."""
     ranked = sorted(routes, key=rank_key)
     best = ranked[0]
     if len(ranked) == 1:
         return best, "Only one route was found."
-    return best, _explain(best, ranked[1])
+
+    # When a slower route wins, the obvious question is why not the fastest one,
+    # so that's the comparison to explain. Otherwise compare with the runner-up.
+    fastest = min(routes, key=lambda route: route.duration_minutes)
+    return best, _explain(best, fastest if fastest is not best else ranked[1])
 
 
-def _explain(best: PlannedRoute, runner_up: PlannedRoute) -> str:
+def _explain(best: PlannedRoute, other: PlannedRoute) -> str:
     # The first criterion where the two routes differ is the one that decided it.
-    ours, theirs = rank_key(best), rank_key(runner_up)
-    other = f"Route {runner_up.id}"
+    ours, theirs = rank_key(best), rank_key(other)
+    name = f"Route {other.id}"
 
     if ours[0] != theirs[0]:
-        return f"Fewest miles in No Travel conditions ({ours[0]:g} vs {theirs[0]:g} on {other})."
+        return f"Fewer miles in No Travel conditions than {name} ({ours[0]:g} vs {theirs[0]:g})."
     if ours[1] != theirs[1]:
-        return f"Fewest Severe miles ({ours[1]:g} vs {theirs[1]:g} on {other})."
+        return f"Fewer Severe miles than {name} ({ours[1]:g} vs {theirs[1]:g})."
     if ours[2] != theirs[2]:
-        return f"Fewest High-risk miles ({ours[2]:g} vs {theirs[2]:g} on {other})."
+        return f"Fewer High-risk miles than {name} ({ours[2]:g} vs {theirs[2]:g})."
     if ours[3] != theirs[3]:
-        return f"Lowest average weather risk ({ours[3]:.2f} vs {theirs[3]:.2f} on {other})."
+        return f"Lower average weather risk than {name} ({ours[3]:.2f} vs {theirs[3]:.2f})."
 
     saved = round(theirs[4] - ours[4])
     if saved > 0:
-        return f"Weather risk is the same as {other}, and this route is {saved} min faster."
-    return "All routes carry the same weather risk and travel time."
+        return f"Same weather risk as {name}, and {saved} min faster."
+    return f"Same weather risk and travel time as {name}."

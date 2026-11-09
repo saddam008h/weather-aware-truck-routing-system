@@ -72,10 +72,26 @@ class RecommendTests(SimpleTestCase):
         b = route(2, minutes=650, average=0.9, high=0)
         c = route(3, minutes=700, average=0.5, high=0)
 
-        best, reason = recommend([a, b, c])
+        best, _ = recommend([a, b, c])
 
         self.assertIs(best, c)
-        self.assertIn("average", reason)
+
+    def test_a_slower_pick_is_explained_against_the_fastest_route(self):
+        fastest = route(1, minutes=600, average=0.2, high=10)
+        runner_up = route(2, minutes=650, average=0.9)
+        best = route(3, minutes=700, average=0.5)
+
+        _, reason = recommend([fastest, runner_up, best])
+
+        self.assertEqual(reason, "Fewer High-risk miles than Route 1 (0 vs 10).")
+
+    def test_the_fastest_pick_is_explained_against_the_runner_up(self):
+        fast = route(1, minutes=600, average=0.2)
+        slow = route(2, minutes=650, average=0.5)
+
+        _, reason = recommend([fast, slow])
+
+        self.assertEqual(reason, "Lower average weather risk than Route 2 (0.20 vs 0.50).")
 
     def test_equal_risk_goes_to_the_fastest_route(self):
         slow = route(1, minutes=700, average=0.1)
