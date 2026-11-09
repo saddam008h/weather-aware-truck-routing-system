@@ -57,6 +57,13 @@ class SampleCheckpointsTests(SimpleTestCase):
         self.assertAlmostEqual(at_100.eta.timestamp(), expected.timestamp(), delta=60)
         self.assertEqual(checkpoints[-1].eta, DEPARTURE + timedelta(hours=3))
 
+    def test_last_eta_is_the_arrival_time(self):
+        # OSRM's segment times leave out turns and add up to less than the route's duration.
+        route = straight_route(segment_durations=[3500, 7000], duration_s=3 * 3600)
+        checkpoints = sample_checkpoints(route, 50, DEPARTURE)
+
+        self.assertAlmostEqual(checkpoints[-1].eta.timestamp(), (DEPARTURE + timedelta(hours=3)).timestamp())
+
     def test_eta_falls_back_to_average_speed(self):
         checkpoints = sample_checkpoints(straight_route(), 50, DEPARTURE)
         at_50 = next(cp for cp in checkpoints if cp.mile == 50)

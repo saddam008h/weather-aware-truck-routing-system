@@ -52,7 +52,13 @@ def _route_miles(route: Route) -> list[float]:
 def _elapsed_seconds(route: Route, miles: list[float]) -> list[float]:
     if route.segment_durations:
         # Running total of OSRM's per-segment times: slow in cities, fast on interstates.
-        return list(accumulate(route.segment_durations, initial=0.0))
+        elapsed = list(accumulate(route.segment_durations, initial=0.0))
+        # Those times leave out turns, so they add up to a few minutes less than the
+        # route's own duration. Scale them so the last ETA is the arrival time.
+        if elapsed[-1] > 0:
+            scale = route.duration_s / elapsed[-1]
+            elapsed = [seconds * scale for seconds in elapsed]
+        return elapsed
 
     # Without per-segment timings, assume a constant average speed.
     total = miles[-1] or 1.0
