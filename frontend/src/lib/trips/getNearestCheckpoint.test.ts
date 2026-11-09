@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { describeRiskFactors } from "@/lib/trips/describeRiskFactors";
 import { getNearestCheckpoint } from "@/lib/trips/getNearestCheckpoint";
 import { buildTestRoute } from "@/test/buildTestRoute";
 
@@ -15,20 +14,5 @@ describe("getNearestCheckpoint", () => {
   it("uses the ends before departure and after arrival", () => {
     expect(getNearestCheckpoint({ route, mile: 0 }).mile).toBe(0);
     expect(getNearestCheckpoint({ route, mile: 138.2 }).mile).toBe(138.2);
-  });
-});
-
-describe("describeRiskFactors", () => {
-  it("lists each factor's level", () => {
-    const risk = {
-      level: "high",
-      score: 2,
-      wind: "high",
-      rain: "low",
-      snow: "moderate",
-      load_adjusted: false,
-    } as const;
-
-    expect(describeRiskFactors({ risk })).toBe("Wind: High · Rain: Low · Snow: Moderate");
   });
 });

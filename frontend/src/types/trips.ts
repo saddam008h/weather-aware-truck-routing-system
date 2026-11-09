@@ -46,6 +46,20 @@ export interface CheckpointRisk {
   load_adjusted: boolean;
 }
 
+/** The weather factors the risk rules score. */
+export type RiskFactorKey = "wind" | "rain" | "snow";
+
+/** One weather factor at a checkpoint, as the checkpoint list and map popup show it. */
+export interface RiskFactor {
+  key: RiskFactorKey;
+  label: string;
+  /** Ready to show, e.g. "38 mph" or "0.30 in/hr". */
+  value: string;
+  level: RiskLevel;
+  /** This factor set the checkpoint's overall level. Never true for a Low checkpoint. */
+  isCause: boolean;
+}
+
 export interface Checkpoint {
   mile: number;
   lat: number;

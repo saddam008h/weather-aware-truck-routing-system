@@ -28,7 +28,7 @@ export function CheckpointRow({ checkpoint, isFocused, onSelect }: CheckpointRow
           </span>
           <RiskBadge level={checkpoint.risk?.level} />
         </span>
-        <CheckpointWeatherSummary weather={checkpoint.weather} />
+        <CheckpointWeatherSummary weather={checkpoint.weather} risk={checkpoint.risk} />
       </button>
     </li>
   );

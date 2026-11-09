@@ -3,6 +3,7 @@ import { Star } from "lucide-react";
 import { AverageRiskScore } from "@/components/trips/AverageRiskScore";
 import { RiskBadge } from "@/components/trips/RiskBadge";
 import { RouteRiskBar } from "@/components/trips/RouteRiskBar";
+import { RouteRiskCause } from "@/components/trips/RouteRiskCause";
 import { RouteStat } from "@/components/trips/RouteStat";
 import type { TripRoute } from "@/types/trips";
 import { cn, formatDuration, formatToLocaleNumber, formatToWeekdayTime } from "@/utils";
@@ -15,7 +16,7 @@ interface RouteSummaryProps {
 
 /**
  * Everything shown about one route option: name, recommended tag, worst risk,
- * roads, distance/time/arrival, the risk bar and average risk.
+ * roads, distance/time/arrival, the risk bar, average risk and what caused the worst risk.
  *
  * Shared by the sidebar card and the map's hover card so the two always match.
  * Spans only, because the sidebar version sits inside a button.
@@ -59,7 +60,10 @@ export function RouteSummary({ route, compact = false }: RouteSummaryProps) {
       )}
 
       <RouteRiskBar risk={route.risk} totalMiles={route.distance_miles} />
-      <AverageRiskScore score={route.risk.average_score} />
+      <span className="flex items-center justify-between gap-md">
+        <AverageRiskScore score={route.risk.average_score} />
+        <RouteRiskCause route={route} />
+      </span>
     </span>
   );
 }

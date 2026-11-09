@@ -3,6 +3,7 @@ import type { FeatureCollection } from "geojson";
 import type {
   HeatmapMetric,
   HeatmapMetricDetails,
+  RiskFactorKey,
   RiskLevel,
   RiskLevelDetails,
   SampleIntervalMiles,
@@ -12,6 +13,13 @@ import type {
 
 /** Lowest to highest. Used wherever levels are listed or stacked in order. */
 export const RISK_LEVEL_ORDER: RiskLevel[] = ["low", "moderate", "high", "severe", "no_travel"];
+
+/** Wind, rain and snow, in the order the app lists them. */
+export const RISK_FACTORS: { key: RiskFactorKey; label: string }[] = [
+  { key: "wind", label: "Wind" },
+  { key: "rain", label: "Rain" },
+  { key: "snow", label: "Snow" },
+];
 
 export const RISK_LEVELS: Record<RiskLevel, RiskLevelDetails> = {
   low: {

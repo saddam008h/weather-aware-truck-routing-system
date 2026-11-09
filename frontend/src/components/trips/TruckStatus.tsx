@@ -4,7 +4,7 @@ import { RiskBadge } from "@/components/trips/RiskBadge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
 import { useTripsContext } from "@/contexts/tripsContext";
 import { useTruckPosition } from "@/hooks/trips";
-import { describeRiskFactors, getNearestCheckpoint } from "@/lib/trips";
+import { describeRiskCause, getNearestCheckpoint } from "@/lib/trips";
 import { formatToLocaleNumber, formatToWeekdayTime } from "@/utils";
 
 /**
@@ -47,7 +47,9 @@ export function TruckStatus() {
           </TooltipTrigger>
           <TooltipContent className="max-w-c-xxs">
             Risk where the truck is at this hour.
-            {risk ? ` ${describeRiskFactors({ risk })}` : " The forecast doesn't reach this point yet."}
+            {risk
+              ? ` ${describeRiskCause({ risk, loadWeightLbs: tripPlan.load_weight_lbs })}`
+              : " The forecast doesn't reach this point yet."}
           </TooltipContent>
         </Tooltip>
       )}
