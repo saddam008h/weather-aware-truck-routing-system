@@ -100,13 +100,20 @@ just I-5) the response has fewer and says so in `warnings`.
 
 OSRM returns how many seconds each tiny segment of the route takes, so the ETA
 at mile 150 reflects slow city stretches and fast interstate ones rather than an
-average speed. Checkpoints sit at mile 0, every N miles, and at the destination.
+average speed. Those segment times leave out turns, so they're scaled to add up
+to the route's duration, which makes the destination's ETA the arrival time.
+Checkpoints sit at mile 0, every N miles, and at the destination.
 
 ### Weather
 
-Each checkpoint gets the forecast hour closest to its ETA. Lookups are snapped
-to a 0.1° grid (~7 miles), which is about the resolution of the forecast models
-anyway and lets overlapping routes share requests.
+Wind and temperature come from the forecast hour closest to each checkpoint's
+ETA. Rain and snow are hourly totals, so they come from the hour the truck is
+driving through. Lookups are snapped to a 0.1° grid (~7 miles), which is about the
+resolution of the forecast models anyway and lets overlapping routes share requests.
+
+Values are rounded to the risk table's precision before they're scored: whole mph,
+0.01 in of rain and 0.1 in of snow, with halves rounded up. The app shows them the
+same way, so a risk badge always matches the number next to it.
 
 - **Wind** uses the sustained 10 m wind speed. Gusts are returned for context
   but aren't scored, since the brief gives one wind figure.
@@ -141,13 +148,18 @@ per risk level for every route. Routes are then compared in this order:
 No Travel isn't in the brief's list, but a route through No Travel weather
 shouldn't win just because it has fewer Severe miles. Miles are compared to a
 tenth of a mile and the average to two decimals, so rounding noise can't beat a
-real time saving. The response includes a one-line `recommendation` explaining
-what decided it.
+real time saving. The response includes a one-line `recommendation`: when a
+slower route wins it says why it beat the fastest one, otherwise what put it
+ahead of the runner-up.
+
+Stretches the forecast doesn't reach yet (a long trip leaving days from now) are
+counted as unknown. They're left out of the risk miles and the average, and
+`warnings` says so.
 
 ### Heatmap
 
 Grid cells (about 17 miles across, coarser on very long trips) covering every
-route plus one cell either side, capped at 300 points. All 49 hourly frames come
+route plus one cell either side, kept to about 300 points. All 49 hourly frames come
 back in one response so the slider never waits on the network.
 
 ## Known limitations
