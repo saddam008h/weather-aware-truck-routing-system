@@ -17,10 +17,12 @@ class PlaceSerializer(serializers.Serializer):
 
 class WeatherSerializer(serializers.Serializer):
     temperature_f = RoundedFloatField(digits=1)
-    wind_mph = RoundedFloatField(digits=1, help_text="Sustained wind at 10 m, used for the risk rules.")
+    wind_mph = RoundedFloatField(
+        digits=0, help_text="Sustained wind at 10 m in whole mph, like the risk table. Used for the risk rules."
+    )
     gust_mph = RoundedFloatField(digits=1, help_text="Shown for context, not used in the risk rules.")
-    rain_in_hr = RoundedFloatField(digits=2)
-    snow_in_hr = RoundedFloatField(digits=2)
+    rain_in_hr = RoundedFloatField(digits=2, help_text="Rain and showers during the hour the truck passes, to 0.01 in.")
+    snow_in_hr = RoundedFloatField(digits=1, help_text="Snowfall during the hour the truck passes, to 0.1 in.")
 
 
 class RiskSerializer(serializers.Serializer):

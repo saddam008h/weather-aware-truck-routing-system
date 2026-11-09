@@ -80,8 +80,8 @@ def _frame(hour: int, when: datetime, series: list[HourlyForecast], load_weight_
             snow.append(None)
             continue
         risk.append(int(assess(sample, load_weight_lbs).level))
-        wind.append(round(sample.wind_mph, 1))
-        rain.append(round(sample.rain_in_hr, 2))
-        snow.append(round(sample.snow_in_hr, 2))
+        wind.append(sample.wind_mph)
+        rain.append(sample.rain_in_hr)
+        snow.append(sample.snow_in_hr)
 
     return HeatmapFrame(hour=hour, time=when, risk=risk, wind_mph=wind, rain_in_hr=rain, snow_in_hr=snow)

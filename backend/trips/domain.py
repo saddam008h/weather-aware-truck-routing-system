@@ -3,8 +3,10 @@
 Nothing here talks to the network or the database. Serializers read these
 objects directly when building API responses.
 """
+import math
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import ROUND_HALF_UP, Decimal
 from enum import IntEnum
 
 # (latitude, longitude)
@@ -70,22 +72,49 @@ class HourlyForecast:
     snow_in_hr: list[float | None]
 
     def at(self, when: datetime) -> WeatherSample | None:
-        """The forecast hour closest to `when`, or None if it's outside the series."""
-        index = round((when.timestamp() - self.first_hour) / 3600)
-        if not 0 <= index < len(self.wind_mph):
+        """The weather at `when`, or None if it's outside the series.
+
+        Temperature and wind are readings taken on the hour, so the closest hour
+        is used. Rain and snow are totals for the hour *before* each timestamp,
+        so for those we want the hour the truck is driving through, which is
+        filed under the next timestamp.
+        """
+        hours = (when.timestamp() - self.first_hour) / 3600
+        reading = round(hours)
+        hour_total = math.floor(hours) + 1
+        if not (0 <= reading < len(self.wind_mph) and 0 <= hour_total < len(self.rain_in_hr)):
             return None
 
         values = (
-            self.temperature_f[index],
-            self.wind_mph[index],
-            self.gust_mph[index],
-            self.rain_in_hr[index],
-            self.snow_in_hr[index],
+            self.temperature_f[reading],
+            self.wind_mph[reading],
+            self.gust_mph[reading],
+            self.rain_in_hr[hour_total],
+            self.snow_in_hr[hour_total],
         )
         # Open-Meteo sends nulls past the end of some models' range.
         if any(value is None for value in values):
             return None
-        return WeatherSample(*values)
+
+        temperature, wind, gust, rain, snow = values
+        # Rounded to the precision of the brief's risk table (whole mph, 0.01 in of
+        # rain, 0.1 in of snow), which is also how the app shows them. The risk is
+        # then worked out from exactly the number on screen, so "35 mph" can never
+        # come with a Moderate badge.
+        return WeatherSample(
+            temperature_f=temperature,
+            wind_mph=_round_half_up(wind, 0),
+            gust_mph=gust,
+            rain_in_hr=_round_half_up(rain, 2),
+            snow_in_hr=_round_half_up(snow, 1),
+        )
+
+
+def _round_half_up(value: float, places: int) -> float:
+    # round() sends halves to the even neighbour (round(34.5) == 34), and binary
+    # floats blur halves anyway (0.01 + 0.09 == 0.09999999999999999). Rounding the
+    # decimal text half up gives 35 and 0.1.
+    return float(Decimal(str(value)).quantize(Decimal(10) ** -places, rounding=ROUND_HALF_UP))
 
 
 # Risk at one checkpoint: the overall level plus what each factor scored on its own.
