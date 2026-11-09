@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. Every color, spacing and radius in the app comes from here.
+
+  The @theme blocks turn tokens into Tailwind classes (`p-xl`, `gap-md`,
+  `bg-background`, `text-text-secondary`, `bg-risk-severe` ...). Tailwind's own
+  default scales are switched off with `initial`, so `p-4` or `bg-red-500`
+  generate nothing and can't sneak in.
+
+  Raw values live in :root further down. Map layers (MapLibre) can't use
+  Tailwind classes, so they read those variables directly via getCssVar().
+*/
+
+@theme inline {
+  /* FONT FAMILY (font-sans) */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* SPACINGS (p-xl, gap-md, size-2xl ...) */
+  --spacing-*: initial;
+  --spacing-none: 0px;
+  --spacing-xxxs: 1px;
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 20px;
+  --spacing-3xl: 24px;
+  --spacing-4xl: 32px;
+  --spacing-5xl: 40px;
+  --spacing-6xl: 48px;
+  --spacing-7xl: 64px;
+  --spacing-8xl: 80px;
+  --spacing-9xl: 96px;
+  --spacing-10xl: 128px;
+  --spacing-11xl: 160px;
+  --spacing-12xl: 220px;
+
+  /* RADIUS (rounded-md) */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-full: 9999px;
+
+  /* CONTAINER (max-w-c-xs, w-sidebar) */
+  --container-*: initial;
+  --container-c-xxxs: 136px;
+  --container-c-xxs: 260px;
+  --container-c-xs: 320px;
+  --container-c-sm: 480px;
+  --container-c-md: 560px;
+  --container-c-lg: 620px;
+  --container-sidebar: 420px;
+
+  /* SHADOWS */
+  --shadow-*: initial;
+  --shadow-sm: 0 1px 2px 0 rgba(10, 13, 18, 0.06);
+  --shadow-md: 0 2px 4px -2px rgba(10, 13, 18, 0.06), 0 4px 6px -1px rgba(10, 13, 18, 0.1);
+  --shadow-lg: 0 12px 16px -4px rgba(10, 13, 18, 0.08), 0 4px 6px -2px rgba(10, 13, 18, 0.04);
+
+  /* COLORS */
+  --color-*: initial;
+  --color-transparent: transparent;
+
+  /* BACKGROUNDS */
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+  --color-background-overlay: var(--background-overlay);
+  --color-bg-brand: var(--bg-brand);
+  --color-bg-brand-subtle: var(--bg-brand-subtle);
+  --color-bg-danger: var(--bg-danger);
+  --color-bg-warning: var(--bg-warning);
+  --color-skeleton: var(--skeleton);
+
+  /* TEXTS */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-text-brand: var(--text-brand);
+  --color-text-danger: var(--text-danger);
+  --color-text-warning: var(--text-warning);
+
+  /* BORDERS */
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
+  --color-border-brand: var(--border-brand);
+  --color-border-danger: var(--border-danger);
+  --color-border-warning: var(--border-warning);
+
+  /* BUTTONS */
+  --color-button-primary: var(--button-primary);
+  --color-button-primary-hover: var(--button-primary-hover);
+  --color-text-button-primary: var(--text-button-primary);
+
+  /* TOOLTIP */
+  --color-bg-tooltip: var(--bg-tooltip);
+  --color-text-tooltip: var(--text-tooltip);
+
+  /* RISK LEVELS: solid (bars, dots), subtle (badge background), strong (badge text) */
+  --color-risk-low: var(--risk-low);
+  --color-risk-moderate: var(--risk-moderate);
+  --color-risk-high: var(--risk-high);
+  --color-risk-severe: var(--risk-severe);
+  --color-risk-no-travel: var(--risk-no-travel);
+  --color-risk-unknown: var(--risk-unknown);
+
+  --color-risk-low-subtle: var(--risk-low-subtle);
+  --color-risk-moderate-subtle: var(--risk-moderate-subtle);
+  --color-risk-high-subtle: var(--risk-high-subtle);
+  --color-risk-severe-subtle: var(--risk-severe-subtle);
+  --color-risk-no-travel-subtle: var(--risk-no-travel-subtle);
+  --color-risk-unknown-subtle: var(--risk-unknown-subtle);
+
+  --color-risk-low-strong: var(--risk-low-strong);
+  --color-risk-moderate-strong: var(--risk-moderate-strong);
+  --color-risk-high-strong: var(--risk-high-strong);
+  --color-risk-severe-strong: var(--risk-severe-strong);
+  --color-risk-no-travel-strong: var(--risk-no-travel-strong);
+  --color-risk-unknown-strong: var(--risk-unknown-strong);
+}
+
+@theme {
+  /* FONT SIZES (text-xs ... text-display-xs) */
+  --text-*: initial;
+  --text-xxs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-display-xs: 22px;
+
+  --text-xxs--line-height: 1.3;
+  --text-xs--line-height: 1.35;
+  --text-sm--line-height: 1.4;
+  --text-md--line-height: 1.4;
+  --text-lg--line-height: 1.35;
+  --text-xl--line-height: 1.3;
+  --text-display-xs--line-height: 1.2;
+}
+
+:root {
+  /* Surfaces */
+  --background: rgba(255, 255, 255, 1);
+  --background-secondary: rgba(249, 248, 246, 1);
+  --background-tertiary: rgba(240, 239, 236, 1);
+  --background-overlay: rgba(255, 255, 255, 0.96);
+  --bg-brand: rgba(36, 83, 212, 1);
+  --bg-brand-subtle: rgba(236, 241, 253, 1);
+  --bg-danger: rgba(251, 236, 232, 1);
+  --bg-warning: rgba(255, 246, 223, 1);
+  --skeleton: rgba(236, 234, 231, 1);
+
+  /* Text */
+  --text-primary: rgba(22, 22, 21, 1);
+  --text-secondary: rgba(99, 99, 92, 1);
+  --text-tertiary: rgba(140, 138, 133, 1);
+  --text-placeholder: rgba(169, 162, 157, 1);
+  --text-brand: rgba(36, 83, 212, 1);
+  --text-danger: rgba(168, 52, 37, 1);
+  --text-warning: rgba(138, 98, 8, 1);
+
+  /* Borders */
+  --border-primary: rgba(226, 223, 219, 1);
+  --border-secondary: rgba(0, 0, 0, 0.08);
+  --border-brand: rgba(36, 83, 212, 1);
+  --border-danger: rgba(232, 190, 180, 1);
+  --border-warning: rgba(234, 218, 181, 1);
+
+  /* Buttons */
+  --button-primary: rgba(28, 25, 23, 1);
+  --button-primary-hover: rgba(58, 54, 50, 1);
+  --text-button-primary: rgba(255, 255, 255, 1);
+
+  /* Tooltip */
+  --bg-tooltip: rgba(28, 25, 23, 1);
+  --text-tooltip: rgba(255, 255, 255, 1);
+
+  /* Risk levels */
+  --risk-low: rgba(47, 158, 110, 1);
+  --risk-moderate: rgba(227, 181, 5, 1);
+  --risk-high: rgba(240, 124, 30, 1);
+  --risk-severe: rgba(217, 58, 43, 1);
+  --risk-no-travel: rgba(123, 44, 191, 1);
+  --risk-unknown: rgba(168, 162, 158, 1);
+
+  --risk-low-subtle: rgba(232, 246, 238, 1);
+  --risk-moderate-subtle: rgba(253, 246, 216, 1);
+  --risk-high-subtle: rgba(253, 236, 220, 1);
+  --risk-severe-subtle: rgba(251, 228, 225, 1);
+  --risk-no-travel-subtle: rgba(241, 230, 250, 1);
+  --risk-unknown-subtle: rgba(242, 241, 239, 1);
+
+  --risk-low-strong: rgba(29, 107, 74, 1);
+  --risk-moderate-strong: rgba(128, 98, 0, 1);
+  --risk-high-strong: rgba(161, 77, 10, 1);
+  --risk-severe-strong: rgba(163, 38, 26, 1);
+  --risk-no-travel-strong: rgba(90, 29, 145, 1);
+  --risk-unknown-strong: rgba(107, 101, 96, 1);
+
+  /* Map lines and markers (read by MapLibre, not Tailwind) */
+  --map-route-inactive: rgba(120, 113, 108, 1);
+  --map-route-casing: rgba(255, 255, 255, 1);
+  --map-checkpoint-stroke: rgba(255, 255, 255, 1);
+
+  /* Heatmap color ramps, weakest to strongest. Transparent below the first stop. */
+  --heatmap-risk-1: rgba(227, 181, 5, 0.55);
+  --heatmap-risk-2: rgba(240, 124, 30, 1);
+  --heatmap-risk-3: rgba(217, 58, 43, 1);
+  --heatmap-risk-4: rgba(123, 44, 191, 1);
+
+  --heatmap-wind-1: rgba(153, 226, 208, 0.55);
+  --heatmap-wind-2: rgba(47, 181, 160, 1);
+  --heatmap-wind-3: rgba(21, 127, 116, 1);
+  --heatmap-wind-4: rgba(11, 77, 74, 1);
+
+  --heatmap-rain-1: rgba(158, 197, 254, 0.55);
+  --heatmap-rain-2: rgba(59, 130, 246, 1);
+  --heatmap-rain-3: rgba(29, 78, 216, 1);
+  --heatmap-rain-4: rgba(23, 37, 84, 1);
+
+  --heatmap-snow-1: rgba(224, 231, 255, 0.6);
+  --heatmap-snow-2: rgba(165, 180, 252, 1);
+  --heatmap-snow-3: rgba(99, 102, 241, 1);
+  --heatmap-snow-4: rgba(67, 56, 202, 1);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-text-primary antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--border-brand);
+    outline-offset: 2px;
+  }
+}
+
+/* MapLibre popups: match the app's cards instead of the library's default look.
+   @apply because @theme inline tokens don't exist as runtime CSS variables. */
+.maplibregl-popup-content {
+  @apply rounded-lg p-none font-sans shadow-lg;
+}
+
+.maplibregl-popup-tip {
+  display: none;
+}
